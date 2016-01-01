@@ -47,11 +47,24 @@
         }
       }, 1024);
     };
+    ME.watchStatus = function(id) {
+      var cur;
+      var checkUpdate = function() {
+        ME.getStatus(id, function(text) {
+          if (text != cur) {
+            cur = text;
+            ME.log(id + ' changed status to "' + text + '" at ' + new Date().toString());
+          }
+        });
+        setTimeout(checkUpdate, 100);
+      }
+      checkUpdate();
+    }
   </script>
   <form>
    <input type='button' value='Go' onClick='ME.go()'/>
    <input type='text' id='statusId'/>
-   <input type='button' value='Get status' onClick='var value = document.getElementById("statusId").value; ME.getStatus(value, function(text) { ME.log(value + ": " + text); })'/>
+   <input type='button' value='Get status' onClick='var value = document.getElementById("statusId").value; ME.log("Watching for " + value); ME.watchStatus(value);'/>
   </form>
   <div id='log'>
   </div>
