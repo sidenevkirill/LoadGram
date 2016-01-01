@@ -33,7 +33,7 @@ body {
       apiId: 1943647
     });
     var ME = {};
-    ME.log = function(action) {
+    ME.log = function(builder) {
       var el = document.createElement('div');
       builder(el);
       document.getElementById('log').appendChild(el);
