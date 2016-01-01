@@ -15,7 +15,7 @@
       document.getElementById('log').appendChild(el);
     };
     function go() {
-      ME.log('Logging...);
+      ME.log('Logging...');
       VK.Auth.login(function(response) {
         if (response.session) {
           ME.log('User: ' + response.session.mid);
