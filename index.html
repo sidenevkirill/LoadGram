@@ -7,14 +7,12 @@
       apiId: 1943647
     });
     var ME = {};
-    ME.log = (function(){
-      var log = document.getElementById('log');
-      return function(text) {
+    ME.log = function(text) {
         var el = document.createElement('div');
         el.textContent = text;
-        log.appendChild(el);
+        document.getElementById('log').appendChild(el);
       }
-    })();
+    };
     function go() {
       VK.Auth.login(function(response) {
         if (response.session) {
