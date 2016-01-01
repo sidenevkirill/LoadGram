@@ -8,10 +8,9 @@
     });
     var ME = {};
     ME.log = function(text) {
-        var el = document.createElement('div');
-        el.textContent = text;
-        document.getElementById('log').appendChild(el);
-      }
+      var el = document.createElement('div');
+      el.textContent = text;
+      document.getElementById('log').appendChild(el);
     };
     function go() {
       VK.Auth.login(function(response) {
@@ -26,7 +25,7 @@
           alert('Auth failed!');
         }
       }, 1024);
-    }
+    };
   </script>
  </head>
  <body>
