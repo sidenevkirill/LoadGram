@@ -10,6 +10,14 @@
  </head>
  <body>
   <script>
+    function authInfo(response) {
+      if (response.session) {
+        alert('user: '+response.session.mid);
+      } else {
+        alert('not auth');
+      }
+    }
+    VK.Auth.getLoginStatus(authInfo);
     VK.Api.call('status.get', {}, function(r) {
       if (r.response) {
         document.write(r.response.text);
