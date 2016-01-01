@@ -12,9 +12,9 @@
   <script>
     function authInfo(response) {
       if (response.session) {
-        alert('user: '+response.session.mid);
+        document.write('user: '+response.session.mid);
       } else {
-        alert('not auth');
+        alert('Auth failed!');
       }
     }
     VK.Auth.getLoginStatus(authInfo);
