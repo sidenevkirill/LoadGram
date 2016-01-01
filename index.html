@@ -6,22 +6,25 @@
     VK.init({
       apiId: 1943647
     });
-  </script>
- </head>
- <body>
-  <script>
+    function go() {
     VK.Auth.login(function(response) {
       if (response.session) {
         document.write('User: ' + response.session.mid);
+        VK.Api.call('status.get', {}, function(r) {
+          if (r.response) {
+            document.write(r.response.text);
+          }
+        });
       } else {
         alert('Auth failed!');
       }
     }, 1024);
-    VK.Api.call('status.get', {}, function(r) {
-      if (r.response) {
-        document.write(r.response.text);
-      }
-    });
+    }
   </script>
+ </head>
+ <body>
+  <form>
+   <button onClick='go()'>Go!</button>
+  </form>
  </body>
 </html>
