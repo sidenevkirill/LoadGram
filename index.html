@@ -6,19 +6,28 @@
     VK.init({
       apiId: 1943647
     });
-    function go() {
-    VK.Auth.login(function(response) {
-      if (response.session) {
-        document.write('User: ' + response.session.mid);
-        VK.Api.call('status.get', {}, function(r) {
-          if (r.response) {
-            document.write(r.response.text);
-          }
-        });
-      } else {
-        alert('Auth failed!');
+    var ME = {};
+    ME.log = (function(){
+      var log = document.getElementById('log');
+      return function(text) {
+        var el = document.createElement('div');
+        el.textContent = text;
+        log.appendChild(el);
       }
-    }, 1024);
+    })();
+    function go() {
+      VK.Auth.login(function(response) {
+        if (response.session) {
+          ME.log('User: ' + response.session.mid);
+          VK.Api.call('status.get', {}, function(r) {
+            if (r.response) {
+              ME.log(r.response.text);
+            }
+          });
+        } else {
+          alert('Auth failed!');
+        }
+      }, 1024);
     }
   </script>
  </head>
@@ -26,5 +35,7 @@
   <form>
    <button onClick='go()'>Go!</button>
   </form>
+  <div id='log'>
+  </div>
  </body>
 </html>
