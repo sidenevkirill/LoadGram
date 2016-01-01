@@ -41,13 +41,13 @@ body {
     ME.logText = function(text) {
       ME.log(function(el) {
         el.textContent = text;
-      }
+      });
     };
     ME.logError = function(text) {
       ME.log(function(el) {
         el.textContent = text;
         el.class = 'error';
-      }
+      });
     };
     ME.getStatus = function(id, action) {
       VK.Api.call('status.get', {user_id : id}, function(r) {
