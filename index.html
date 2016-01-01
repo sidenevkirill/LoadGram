@@ -14,25 +14,27 @@
       el.textContent = text;
       document.getElementById('log').appendChild(el);
     };
+    ME.getStatus = function(id, action) {
+      VK.Api.call('status.get', {user_id : id}, function(r) {
+        if (r.response) {
+          action(r.response.text);
+        }
+      });
+    }
     function go() {
-      ME.log('Logging...');
       VK.Auth.login(function(response) {
         if (response.session) {
           ME.log('User: ' + response.session.mid);
-          VK.Api.call('status.get', {}, function(r) {
-            if (r.response) {
-              ME.log(r.response.text);
-            }
-          });
         } else {
           alert('Auth failed!');
         }
       }, 1024);
-      ME.log('Done');
     };
   </script>
   <form>
    <input type='button' value='Go' onClick='go()'/>
+   <input type='text' id='statusId'/>
+   <input type='button' value='Get status' onClick='var value = document.getElementById("statusId").value; ME.getStatus(value, function(text) { ME.log(value + ": " + text); })'/>
   </form>
   <div id='log'>
   </div>
