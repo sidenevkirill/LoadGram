@@ -1,7 +1,20 @@
 <html>
  <head>
   <title>VK</title>
+  <script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    VK.init({
+      apiId: 1943647
+    });
+  </script>
  </head>
  <body>
+  <script>
+    VK.Api.call('status.get', {}, function(r) {
+      if (r.response) {
+        document.write(r.response.text);
+      }
+    });
+  </script>
  </body>
 </html>
