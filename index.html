@@ -12,13 +12,16 @@
   <script>
     function authInfo(response) {
       if (response.session) {
-        document.write('user: '+response.session.mid);
+        document.write('user: ' + response.session.mid);
       } else {
         alert('Auth failed!');
       }
     }
     VK.Auth.getLoginStatus(authInfo);
     VK.Api.call('status.get', {}, function(r) {
+      if (r.error) {
+        alert('' + r.error.error_code + ' ' + r.error.error_msg);
+      }
       if (r.response) {
         document.write(r.response.text);
       }
