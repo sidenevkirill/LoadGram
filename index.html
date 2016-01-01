@@ -66,9 +66,10 @@ body {
   </script>
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
-   <br>
+  </form>
+  <form onsubmit='var value = document.getElementById("statusId").value; ME.log("Watching for " + value); ME.watchStatus(value); return false;'>
    <input type='text' id='statusId'/>
-   <input type='button' value='Get status' onClick='var value = document.getElementById("statusId").value; ME.log("Watching for " + value); ME.watchStatus(value);'/>
+   <input type='submit' value='Get status'/>
   </form>
   <div id='log'>
   </div>
