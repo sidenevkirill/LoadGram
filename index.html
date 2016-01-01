@@ -21,6 +21,10 @@ body {
   background-color : #ddffcc;
   border-color : #55ff00;
 }
+#log > div.error {
+  background-color : #ff9955;
+  border-color : #ff0000;
+}
   </style>
  </head>
  <body>
@@ -29,10 +33,21 @@ body {
       apiId: 1943647
     });
     var ME = {};
-    ME.log = function(text) {
+    ME.log = function(action) {
       var el = document.createElement('div');
-      el.textContent = text;
+      builder(el);
       document.getElementById('log').appendChild(el);
+    }
+    ME.logText = function(text) {
+      ME.log(function(el) {
+        el.textContent = text;
+      }
+    };
+    ME.logError = function(text) {
+      ME.log(function(el) {
+        el.textContent = text;
+        el.class = 'error';
+      }
     };
     ME.getStatus = function(id, action) {
       VK.Api.call('status.get', {user_id : id}, function(r) {
@@ -44,9 +59,9 @@ body {
     ME.auth = function() {
       VK.Auth.login(function(response) {
         if (response.session) {
-          ME.log('User: ' + response.session.mid);
+          ME.logText('User: ' + response.session.mid);
         } else {
-          alert('Auth failed!');
+          ME.logError('Auth failed!');
         }
       }, 1024);
     };
@@ -56,7 +71,7 @@ body {
         ME.getStatus(id, function(text) {
           if (text != cur) {
             cur = text;
-            ME.log(id + ' changed status to "' + text + '" at ' + new Date().toString());
+            ME.logText(id + ' changed status to "' + text + '" at ' + new Date().toString());
           }
         });
         setTimeout(checkUpdate, 100);
@@ -67,7 +82,7 @@ body {
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
   </form>
-  <form onsubmit='var value = document.getElementById("statusId").value; ME.log("Watching for " + value); ME.watchStatus(value); return false;'>
+  <form onsubmit='var value = document.getElementById("statusId").value; ME.logText("Watching for " + value); ME.watchStatus(value); return false;'>
    <input type='text' id='statusId'/>
    <input type='submit' value='Get status'/>
   </form>
