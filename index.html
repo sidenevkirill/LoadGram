@@ -145,10 +145,9 @@ body {
     })();
     ME.getStatus = function(id, action) {
       ME.batchCall('status.get', { user_id : id }, function(r) {
-          action(r.text);
-        }, function(msg) {
-          ME.logError('Error on getting status for "' + id + '": ' + msg);
-        }
+        action(r.text);
+      }, function(msg) {
+        ME.logError('Error on getting status for "' + id + '": ' + msg);
       });
     }
     ME.auth = function() {
