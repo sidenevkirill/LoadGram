@@ -138,7 +138,7 @@ body {
     VK.Auth.getLoginStatus(function(response) {
       if (response.session)
         ME.loadFromHash();
-    }
+    });
   </script>
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
