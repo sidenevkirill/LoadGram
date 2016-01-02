@@ -69,13 +69,17 @@ body {
     };
     ME.watchStatus = function(id) {
       var cur;
+      var logger = function() {
+        ME.logText(id + ' changed status to "' + cur + '" at ' + new Date().toString());
+      }
+      var handler = function(text) {
+        if (text != cur) {
+          cur = text;
+          logger();
+        }
+      };
       var checkUpdate = function() {
-        ME.getStatus(id, function(text) {
-          if (text != cur) {
-            cur = text;
-            ME.logText(id + ' changed status to "' + text + '" at ' + new Date().toString());
-          }
-        });
+        ME.getStatus(id, handler);
         setTimeout(checkUpdate, 100);
       }
       checkUpdate();
