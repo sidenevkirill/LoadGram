@@ -25,6 +25,12 @@ body {
   background-color : #ff9955;
   border-color : #ff0000;
 }
+#log > div > div > .user {
+  background-color : #bbff99;
+}
+#log > div > div > .stamp {
+  color : #777777;
+}
   </style>
  </head>
  <body>
@@ -69,13 +75,25 @@ body {
     };
     ME.watchStatus = function(id) {
       var cur;
-      var logger = function() {
-        ME.logText(id + ' changed status to "' + cur + '" at ' + new Date().toString());
+      var logger = function(el) {
+        var user = document.createElement('span');
+        user.className = 'user';
+        user.textContent = id;
+        var stamp = document.createElement('span');
+        stamp.className = 'stamp';
+        stamp.textContent = new Date().toLocaleString();
+        var header = document.createElement('div');
+        header.appendChild(user);
+        header.appendChild(stamp);
+        var message = document.createElement('div');
+        message.textContent = cur;
+        el.appendChild(header);
+        el.appendChild(message);
       }
       var handler = function(text) {
         if (text != cur) {
           cur = text;
-          logger();
+          ME.log(logger);
         }
       };
       var checkUpdate = function() {
