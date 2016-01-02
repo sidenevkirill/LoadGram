@@ -83,7 +83,7 @@ body {
     ME.auth = function() {
       VK.Auth.login(function(response) {
         if (response.session)
-          ME.loadFromHash();
+          ME.beginInteraction();
         else
           ME.logError('Auth failed!');
       }, 1024);
@@ -122,12 +122,13 @@ body {
       }
       addUsers();
     }
-    ME.loadFromHash = (function() {
+    ME.beginInteraction = (function() {
       var loaded;
       return function() {
         if (loaded)
           return;
         loaded = true;
+        ME.logText('And here we go! Just enter id or screen name. Something like \'izokina,21014360\'.');
         if (window.location.hash) {
           ME.watchStatus(window.location.hash.substring(1));
         }
@@ -137,7 +138,9 @@ body {
     VK.init({ apiId: 1943647 });
     VK.Auth.getLoginStatus(function(response) {
       if (response.session)
-        ME.loadFromHash();
+        ME.beginInteraction();
+      else
+        ME.logText('Hi there! Here you need to login first :)');
     });
   </script>
   <form>
