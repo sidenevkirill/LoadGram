@@ -117,8 +117,14 @@ body {
             var quest = pack[i];
             var res = r.response[i];
             if (!res) {
-              ME.logError('Something went wrong: ' + r.execute_errors[errorIndex].error_msg);
+              var msg = r.execute_errors[errorIndex].error_msg;
               errorIndex++;
+              if (quest.err) {
+                if (!quest.err(msg))
+                  enqueue(quest);
+                continue;
+              }
+              ME.logError('Something went wrong with ' + quest.method + ': ' + msg);
               enqueue(quest);
               continue;
             }
@@ -128,22 +134,20 @@ body {
           setTimeout(tryRun, 300);
         });
       }
-      return function(method, arg, back) {
+      return function(method, arg, back, err) {
         if (!queue) {
           pack = [];
           queue = pack;
           tryRun();
         }
-        enqueue({ method : method, arg : arg, back : back });
+        enqueue({ method : method, arg : arg, back : back, err : err });
       }
     })();
     ME.getStatus = function(id, action) {
       ME.batchCall('status.get', { user_id : id }, function(r) {
-        if (r.response) {
-          action(r.response.text);
-        } else {
-          if (r.error && r.error.error_code != 6)
-            ME.logError('Error on getting status for "' + id + '": ' + r.error.error_msg);
+          action(r.text);
+        }, function(msg) {
+          ME.logError('Error on getting status for "' + id + '": ' + msg);
         }
       });
     }
@@ -158,16 +162,12 @@ body {
     ME.watchStatus = function(id) {
       var startWatching = function(id, name) {
         var cur;
-        var checkUpdate = function() {
-          ME.getStatus(id, function(text) {
-            if (text != cur) {
-              cur = text;
-              ME.logStatus(name, cur);
-            }
-          });
-          setTimeout(checkUpdate, 1000);
-        }
-        checkUpdate();
+        ME.getStatus(id, function(text) {
+          if (text != cur) {
+            cur = text;
+            ME.logStatus(name, cur);
+          }
+        });
       }
       var addUsers = function() {
         VK.Api.call('users.get', { user_ids : id }, function(r) {
