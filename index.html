@@ -107,7 +107,7 @@ body {
         VK.Api.call('users.get', { user_ids : id }, function(r) {
           if (r.response && r.response[0]) {
             var user = r.response[0];
-            id = user.id;
+            id = user.uid;
             name = user.first_name + ' ' + user.last_name;
             checkUpdate();
           } else {
