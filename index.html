@@ -56,6 +56,23 @@ body {
         el.className = 'error';
       });
     };
+    ME.logStatus = function(name, text) {
+      ME.log(function(el) {
+        var user = document.createElement('span');
+        user.className = 'user';
+        user.textContent = name;
+        var stamp = document.createElement('span');
+        stamp.className = 'stamp';
+        stamp.textContent = new Date().toLocaleString();
+        var header = document.createElement('div');
+        header.appendChild(user);
+        header.appendChild(stamp);
+        var message = document.createElement('div');
+        message.textContent = text;
+        el.appendChild(header);
+        el.appendChild(message);
+      });
+    }
     ME.getStatus = function(id, action) {
       VK.Api.call('status.get', { user_id : id }, function(r) {
         if (r.response) {
@@ -76,40 +93,25 @@ body {
       }, 1024);
     };
     ME.watchStatus = function(id) {
-      var cur;
-      var name;
-      var logger = function(el) {
-        var user = document.createElement('span');
-        user.className = 'user';
-        user.textContent = name;
-        var stamp = document.createElement('span');
-        stamp.className = 'stamp';
-        stamp.textContent = new Date().toLocaleString();
-        var header = document.createElement('div');
-        header.appendChild(user);
-        header.appendChild(stamp);
-        var message = document.createElement('div');
-        message.textContent = cur;
-        el.appendChild(header);
-        el.appendChild(message);
-      }
-      var handler = function(text) {
-        if (text != cur) {
-          cur = text;
-          ME.log(logger);
-        }
-      };
-      var checkUpdate = function() {
-        ME.getStatus(id, handler);
-        setTimeout(checkUpdate, 1000);
-      }
       var startWatching = function() {
         VK.Api.call('users.get', { user_ids : id }, function(r) {
-          if (r.response && r.response[0]) {
-            var user = r.response[0];
-            id = user.uid;
-            name = user.first_name + ' ' + user.last_name;
-            checkUpdate();
+          if (r.response) {
+            for (var i = 0; i < r.response.length; i++) {
+              var cur;
+              var user = r.response[i];
+              var id = user.uid;
+              var name = user.first_name + ' ' + user.last_name;
+              var checkUpdate = function() {
+                ME.getStatus(id, function(text) {
+                  if (text != cur) {
+                    cur = text;
+                    ME.logStatus(name, cur);
+                  }
+                });
+                setTimeout(checkUpdate, 1000);
+              }
+              checkUpdate();
+            }
           } else {
             if (r.error) {
               if (r.error.error_code == 6) {
