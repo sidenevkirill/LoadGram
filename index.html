@@ -83,16 +83,16 @@ body {
       }
       var tryRun = function() {
         dog.sleep = true;
+        if (pack.length == 0) {
+          setTimeout(tryRun, 50);
+          return;
+        }
         var newDog = {};
         dog = newDog;
         setTimeout(function() {
           if (!newDog.sleep)
             tryRun();
         }, 10000);
-        if (pack.length == 0) {
-          setTimeout(tryRun, 50);
-          return;
-        }
         if (!pack.next) {
           pack.next = [];
           queue = pack.next;
