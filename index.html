@@ -61,7 +61,8 @@ body {
         if (r.response) {
           action(r.response.text);
         } else {
-          ME.logError('Error on getting status for "' + id + '": ' + r.error.error_msg);
+          if (r.error && r.error.error_code != 6)
+            ME.logError('Error on getting status for "' + id + '": ' + r.error.error_msg);
         }
       });
     }
