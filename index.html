@@ -138,7 +138,7 @@ body {
       }
     })();
     ME.getStatus = function(id, action) {
-      VK.Api.call('status.get', { user_id : id }, function(r) {
+      ME.batchCall('status.get', { user_id : id }, function(r) {
         if (r.response) {
           action(r.response.text);
         } else {
