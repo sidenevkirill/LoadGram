@@ -111,8 +111,8 @@ body {
             name = user.first_name + ' ' + user.last_name;
             checkUpdate();
           } else {
-            if (error) {
-              if (error.error_code == 6) {
+            if (r.error) {
+              if (r.error.error_code == 6) {
                 setTimeout(startWatching, 100);
               } else {
                 ME.logError('Couldn\'t start watching "' + id + '": ' + r.error.error_msg);
