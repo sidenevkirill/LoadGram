@@ -146,6 +146,7 @@ body {
     ME.getStatus = function(id, action) {
       ME.batchCall('status.get', { user_id : id }, function(r) {
         action(r.text);
+        ME.getStatus(id, action);
       }, function(msg) {
         ME.logError('Error on getting status for "' + id + '": ' + msg);
       });
