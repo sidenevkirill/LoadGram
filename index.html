@@ -98,7 +98,7 @@ body {
       };
       var checkUpdate = function() {
         ME.getStatus(id, handler);
-        setTimeout(checkUpdate, 100);
+        setTimeout(checkUpdate, 1000);
       }
       checkUpdate();
     }
