@@ -116,7 +116,7 @@ body {
           } else {
             if (r.error) {
               if (r.error.error_code == 6) {
-                setTimeout(startWatching, 100);
+                setTimeout(addUsers, 100);
               } else {
                 ME.logError('Couldn\'t start watching "' + id + '": ' + r.error.error_msg);
               }
