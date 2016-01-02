@@ -36,9 +36,6 @@ body {
  </head>
  <body>
   <script type="text/javascript">
-    VK.init({
-      apiId: 1943647
-    });
     var ME = {};
     ME.log = function(builder) {
       var el = document.createElement('div');
@@ -85,11 +82,10 @@ body {
     }
     ME.auth = function() {
       VK.Auth.login(function(response) {
-        if (response.session) {
-          ME.logText('Hi there! Reload page if you have some hashed users, or just add new ones.');
-        } else {
+        if (response.session)
+          ME.loadFromHash();
+        else
           ME.logError('Auth failed!');
-        }
       }, 1024);
     };
     ME.watchStatus = function(id) {
@@ -126,8 +122,22 @@ body {
       }
       addUsers();
     }
-    if (window.location.hash) {
-      ME.watchStatus(window.location.hash.substring(1));
+    ME.loadFromHash = (function() {
+      var loaded;
+      return function() {
+        if (loaded)
+          return;
+        loaded = true;
+        if (window.location.hash) {
+          ME.watchStatus(window.location.hash.substring(1));
+        }
+      }
+    })();
+
+    VK.init({ apiId: 1943647 });
+    VK.Auth.getLoginStatus(function(response) {
+      if (response.session)
+        ME.loadFromHash();
     }
   </script>
   <form>
