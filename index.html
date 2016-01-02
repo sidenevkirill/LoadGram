@@ -127,6 +127,11 @@ body {
       return function() {
         if (loaded)
           return;
+        var permissions = VK.Api.call('account.getAppPermissions', {});
+        if (permissions & 1024 == 0) {
+          ME.logText('We need permission to read statuses. Try to login.');
+          return;
+        }
         loaded = true;
         ME.logText('And here we go! Just enter id or screen name. Something like \'izokina,21014360\'.');
         if (window.location.hash) {
