@@ -70,6 +70,73 @@ body {
         el.appendChild(message);
       });
     }
+    ME.batchCall = (function(){
+      var pack;
+      var queue;
+      var dog = {};
+      var enqueue = function(quest) {
+        if (queue.length == 25) {
+          queue.next = [];
+          queue = queue.next;
+        }
+        queue.push(quest);
+      }
+      var tryRun = function() {
+        dog.sleep = true;
+        var newDog = {};
+        dog = newDog;
+        setTimeout(function() {
+          if (!newDog.sleep)
+            tryRun();
+        }, 10000);
+        if (pack.length == 0) {
+          setTimeout(tryRun, 50);
+          return;
+        }
+        if (!pack.next) {
+          pack.next = [];
+          queue = pack.next;
+        }
+        if (!pack.code) {
+          var calls = [];
+          for (var i = 0; i < pack.length; i++) {
+            var p = pack[i];
+            calls.push('API.' + p.method + '(' + p.arg + ')');
+          }
+          pack.code = 'return [' + calls.join() + '];';
+        }
+        VK.Api.call('execute', { code : pack.code }, function(r) {
+          if (!r.response) {
+            if (r.error && r.error_code != 6)
+              ME.logError('Problems with batch running: ' + r.error.error_msg);
+            setTimeout(tryRun, 50);
+            return;
+          }
+          var errorIndex = 0;
+          for (var i = 0; i < pack.length; i++) {
+            var quest = pack[i];
+            var res = r.response[i];
+            if (!res) {
+              ME.logError('Something went wrong: ' + r.execute_errors[errorIndex].error_msg);
+              errorIndex++;
+              enqueue(quest);
+              continue;
+            }
+            quest.back(res);
+          }
+          pack = pack.next;
+          setTimeout(tryRun, 300);
+        });
+      }
+      return function(method, arg, back) {
+        if (!queue) {
+          pack = [];
+          queue = pack;
+          tryRun();
+        }
+        enqueue({ method : method, arg : arg, back : back });
+      }
+    })();
     ME.getStatus = function(id, action) {
       VK.Api.call('status.get', { user_id : id }, function(r) {
         if (r.response) {
