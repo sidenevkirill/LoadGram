@@ -144,6 +144,7 @@ body {
   </script>
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
+   <input type='button' value='Revoke grants' onClick='VK.Auth.revokeGrants()'/>
   </form>
   <form onsubmit='ME.watchStatus(document.getElementById("statusId").value); return false;'>
    <input type='text' id='statusId'/>
