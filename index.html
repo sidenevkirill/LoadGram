@@ -57,7 +57,7 @@ body {
       });
     };
     ME.getStatus = function(id, action) {
-      VK.Api.call('status.get', {user_id : id}, function(r) {
+      VK.Api.call('status.get', { user_id : id }, function(r) {
         if (r.response) {
           action(r.response.text);
         } else {
@@ -104,7 +104,7 @@ body {
         setTimeout(checkUpdate, 1000);
       }
       var startWatching = function() {
-        VK.Api.call('users.get', id, function(r) {
+        VK.Api.call('users.get', { user_ids : id }, function(r) {
           if (r.response && r.response[0]) {
             var user = r.response[0];
             id = user.id;
@@ -127,7 +127,7 @@ body {
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
   </form>
-  <form onsubmit='var value = document.getElementById("statusId").value; ME.logText("Watching for " + value); ME.watchStatus(value); return false;'>
+  <form onsubmit='ME.watchStatus(document.getElementById("statusId").value); return false;'>
    <input type='text' id='statusId'/>
    <input type='submit' value='Start watching'/>
   </form>
