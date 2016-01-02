@@ -86,7 +86,7 @@ body {
     ME.auth = function() {
       VK.Auth.login(function(response) {
         if (response.session) {
-          ME.logText('User: ' + response.session.mid);
+          ME.logText('Hi there! Reload page if you have some hashed users, or just add new ones.');
         } else {
           ME.logError('Auth failed!');
         }
