@@ -126,6 +126,9 @@ body {
       }
       addUsers();
     }
+    if (window.location.hash) {
+      ME.watchStatus(window.location.hash.substring(1));
+    }
   </script>
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
