@@ -107,7 +107,7 @@ body {
         }
         VK.Api.call('execute', { code : pack.code }, function(r) {
           if (!r.response) {
-            if (r.error && r.error_code != 6)
+            if (r.error && r.error.error_code != 6)
               ME.logError('Problems with batch running: ' + r.error.error_msg);
             setTimeout(tryRun, 50);
             return;
