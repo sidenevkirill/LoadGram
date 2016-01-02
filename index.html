@@ -53,6 +53,8 @@ body {
       VK.Api.call('status.get', {user_id : id}, function(r) {
         if (r.response) {
           action(r.response.text);
+        } else {
+          ME.logError('Error on getting status for "' + id + '": ' + r.error.error_msg);
         }
       });
     }
