@@ -77,10 +77,11 @@ body {
     };
     ME.watchStatus = function(id) {
       var cur;
+      var name;
       var logger = function(el) {
         var user = document.createElement('span');
         user.className = 'user';
-        user.textContent = id;
+        user.textContent = name;
         var stamp = document.createElement('span');
         stamp.className = 'stamp';
         stamp.textContent = new Date().toLocaleString();
@@ -102,7 +103,24 @@ body {
         ME.getStatus(id, handler);
         setTimeout(checkUpdate, 1000);
       }
-      checkUpdate();
+      var startWatching = function() {
+        VK.Api.call('users.get', id, function(r) {
+          if (r.response) {
+            id = r.response.id;
+            name = r.response.first_name + ' ' + r.response.last_name;
+            checkUpdate();
+          } else {
+            if (error) {
+              if (error.error_code == 6) {
+                setTimeout(startWatching, 100);
+              } else {
+                ME.logError('Couldn't start watching "' + id + '": ' + r.error.error_msg);
+              }
+            }
+          }
+        }
+      }
+      startWatching();
     }
   </script>
   <form>
