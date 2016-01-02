@@ -136,12 +136,6 @@ body {
     })();
 
     VK.init({ apiId: 1943647 });
-    VK.Auth.getLoginStatus(function(response) {
-      if (response.session)
-        ME.beginInteraction();
-      else
-        ME.logText('Hi there! Here you need to login first :)');
-    });
   </script>
   <form>
    <input type='button' value='Auth' onClick='ME.auth()'/>
@@ -152,5 +146,13 @@ body {
   </form>
   <div id='log'>
   </div>
+  <script>
+    VK.Auth.getLoginStatus(function(response) {
+      if (response.session)
+        ME.beginInteraction();
+      else
+        ME.logText('Hi there! Here you need to login first :)');
+    });
+  </script>
  </body>
 </html>
