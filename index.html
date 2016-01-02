@@ -93,24 +93,25 @@ body {
       }, 1024);
     };
     ME.watchStatus = function(id) {
-      var startWatching = function() {
+      var startWatching = function(id, name) {
+        var cur;
+        var checkUpdate = function() {
+          ME.getStatus(id, function(text) {
+            if (text != cur) {
+              cur = text;
+              ME.logStatus(name, cur);
+            }
+          });
+          setTimeout(checkUpdate, 1000);
+        }
+        checkUpdate();
+      }
+      var addUsers = function() {
         VK.Api.call('users.get', { user_ids : id }, function(r) {
           if (r.response) {
             for (var i = 0; i < r.response.length; i++) {
-              var cur;
               var user = r.response[i];
-              var id = user.uid;
-              var name = user.first_name + ' ' + user.last_name;
-              var checkUpdate = function() {
-                ME.getStatus(id, function(text) {
-                  if (text != cur) {
-                    cur = text;
-                    ME.logStatus(name, cur);
-                  }
-                });
-                setTimeout(checkUpdate, 1000);
-              }
-              checkUpdate();
+              startWatching(user.uid, user.first_name + ' ' + user.last_name);
             }
           } else {
             if (r.error) {
@@ -123,7 +124,7 @@ body {
           }
         });
       }
-      startWatching();
+      addUsers();
     }
   </script>
   <form>
