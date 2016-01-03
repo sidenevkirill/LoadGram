@@ -177,6 +177,7 @@ body {
           }
         }, function(msg) {
           ME.logError('Couldn\'t start watching "' + id + '": ' + msg);
+          return true;
         });
       }
       addUsers();
