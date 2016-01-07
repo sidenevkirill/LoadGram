@@ -70,6 +70,29 @@ body {
         el.appendChild(message);
       });
     }
+    ME.batcher = function(size) {
+      var batch = { cur : [] };
+      var queue = batch;
+      var res = {};
+      var step = function() {
+        var next = { cur : [] };
+        queue.next = next;
+        queue = next;
+      }
+      res.push = function(elem) {
+        if (queue.cur.length >= size)
+          step();
+        queue.cur.push(elem);
+      }
+      res.fetch = function() {
+        if (!batch.next)
+          step();
+        var b = batch.cur;
+        batch = batch.next;
+        return b;
+      }
+      return res;
+    }
     ME.batchCall = (function(){
       var pack;
       var queue;
