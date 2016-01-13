@@ -104,6 +104,17 @@ body {
         }
         queue.push(quest);
       }
+      var getCode = function(pack) {
+        if (!pack.code) {
+          var calls = [];
+          for (var i = 0; i < pack.length; i++) {
+            var p = pack[i];
+            calls.push('API.' + p.method + '(' + JSON.stringify(p.arg) + ')');
+          }
+          pack.code = 'return [' + calls.join() + '];';
+        }
+        return pack.code;
+      }
       var tryRun = function() {
         dog.sleep = true;
         if (pack.length == 0) {
@@ -120,15 +131,7 @@ body {
           pack.next = [];
           queue = pack.next;
         }
-        if (!pack.code) {
-          var calls = [];
-          for (var i = 0; i < pack.length; i++) {
-            var p = pack[i];
-            calls.push('API.' + p.method + '(' + JSON.stringify(p.arg) + ')');
-          }
-          pack.code = 'return [' + calls.join() + '];';
-        }
-        VK.Api.call('execute', { code : pack.code }, function(r) {
+        VK.Api.call('execute', { code : getCode(pack) }, function(r) {
           if (!r.response) {
             if (r.error && r.error.error_code != 6)
               ME.logError('Problems with batch running: ' + r.error.error_msg);
